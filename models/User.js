@@ -1,21 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
-// import { isEmail } from "validator";
 const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new Schema({
-  email: {
+  username: {
     type: String,
     trim: true,
-    lowercase: true,
     unique: true,
     required: true,
-    // validate: { validator: isEmail, message: "Invalid email." },
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please fill a valid email address",
-    ],
   },
   password: {
     type: String,
@@ -45,13 +38,25 @@ const UserSchema = new Schema({
     },
   ],
 
-  watchlist: [
+  movies_watched_theater: [
     {
       title: {
         type: String,
       },
       movie_id: {
         type: Number,
+      },
+   
+      movie_genres: [
+        {
+          type: Array
+        }
+      ],
+      poster: {
+        type: String,
+      },
+      movie_runtime: {
+        type: Number
       },
     },
   ]
@@ -74,6 +79,14 @@ UserSchema.methods.validatePassword = async function validatePassword(data) {
   return bcrypt.compare(data, this.password);
 };
 
+
+UserSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+      if (err) return cb(err);
+      cb(null, isMatch);
+  });
+}
+  
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
