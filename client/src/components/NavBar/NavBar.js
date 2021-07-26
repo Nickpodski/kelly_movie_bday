@@ -89,6 +89,11 @@ export default function BottomAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
+  const searchMovie = (e) => {
+    e.preventDefault();
+    console.log("Hi!");
+  }
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -125,7 +130,7 @@ export default function BottomAppBar() {
             <MenuItem onClick={handleClose}>Logout</MenuItem>
           </Menu>
           <div className={classes.grow} />
-          <div className={classes.search}>
+          <form className={classes.search} onSubmit={searchMovie}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -137,7 +142,7 @@ export default function BottomAppBar() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
-          </div>
+          </form>
         </Toolbar>
       </AppBar>
     </React.Fragment>
