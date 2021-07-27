@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -83,15 +83,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BottomAppBar() {
+export default function BottomAppBar(props) {
+  const { onChange, onSubmit } = props;
   let history = useHistory();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const formRef = useRef();
 
   const searchMovie = (e) => {
     e.preventDefault();
-    console.log("Hi!");
+    history.push("/search");
+    onSubmit();
+    formRef.current.reset();
   }
 
   const handleClick = (event) => {
@@ -130,7 +134,7 @@ export default function BottomAppBar() {
             <MenuItem onClick={handleClose}>Logout</MenuItem>
           </Menu>
           <div className={classes.grow} />
-          <form className={classes.search} onSubmit={searchMovie}>
+          <form className={classes.search} onSubmit={searchMovie} ref={formRef}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -141,6 +145,7 @@ export default function BottomAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
+              onChange={onChange}
             />
           </form>
         </Toolbar>

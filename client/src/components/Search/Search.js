@@ -20,12 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Search() {
+export default function Search(props) {
   const classes = useStyles();
 
   const renderResults = props.results.map((item, index) => {
     return(
-      <ListItem id={"Movie" + index} alignItems="flex-start">
+      <ListItem key={"Movie" + index} alignItems="flex-start">
         <ListItemAvatar>
           <Avatar variant="square" alt={item.title} src={item.poster} />
         </ListItemAvatar>

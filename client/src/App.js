@@ -8,9 +8,15 @@ import theme from './components/theme/theme'
 import Box from '@material-ui/core/Box';
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useHistory } from "react-router-dom";
-import SearchMovie from './components/Search/Search'
+import SearchMovie from './components/Search/Search';
+import { fetchTotalPages, searchMovies } from "../src/utils/API";
 
 function App() {
+  const [searchMovie, setSearchMovie] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [totalPages, setTotalPages] = useState([]);
+  const [currentPage, setCurrentPage] = useState();
+
   const getWithExpiry = (key) => {
     const itemStr = localStorage.getItem(key);
     if (!itemStr) {
@@ -36,6 +42,12 @@ function App() {
     setWithExpiry('userData', userData, 3600000);
   }, [userData]);
 
+  const handleInputChange = (event) => {
+    const newValue = event.target.value;
+    setSearchMovie(newValue);
+    console.log(searchMovie);
+  };
+
   const setWithExpiry = (key, value, ttl) => {
     const now = new Date();
     const item = {
@@ -44,6 +56,25 @@ function App() {
     }
     localStorage.setItem(key, JSON.stringify(item));
   }
+
+  const getSearchResults = async (page, search) => {
+    const res = await searchMovies(search, page);
+    if (res) {
+      setSearchResults(res);
+    }
+  };
+
+  const getTotalPages = async (search) => {
+    const res = await fetchTotalPages(search);
+    setTotalPages(res);
+  };
+
+  const handleSumbit = () => {
+    window.scrollTo(0, 0);
+    setCurrentPage(1);
+    getSearchResults(1, searchMovie);
+    getTotalPages(searchMovie);
+  };
 
   const saveUserData = (data) => {
     setUserData({
@@ -59,7 +90,7 @@ function App() {
       {userData.isLoggedIn
         ? (
           <div>
-            <NavBar />
+            <NavBar onChange={handleInputChange} onSubmit={handleSumbit} />
             <div>
               <Switch>
                 <Route exact path={["/", "/cardnote"]}>
@@ -72,7 +103,9 @@ function App() {
                   <Theater />
                 </Route>
                 <Route exact path={["/search"]}>
-                  <SearchMovie />
+                  <SearchMovie 
+                  results={searchResults}
+                  />
                 </Route>
               </Switch>
             </div>
