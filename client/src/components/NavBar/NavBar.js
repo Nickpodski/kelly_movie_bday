@@ -110,7 +110,7 @@ export default function BottomAppBar(props) {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <AppBar position="sticky" color="primary" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={handleClick}>
             <MenuIcon />

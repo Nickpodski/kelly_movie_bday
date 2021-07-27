@@ -10,12 +10,18 @@ import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useHistory } from "react-router-dom";
 import SearchMovie from './components/Search/Search';
 import { fetchTotalPages, searchMovies } from "../src/utils/API";
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  toolbar: theme.mixins.toolbar,
+}));
 
 function App() {
+  const classes = useStyles();
   const [searchMovie, setSearchMovie] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
-  const [currentPage, setCurrentPage] = useState();
+  // const [currentPage, setCurrentPage] = useState();
 
   const getWithExpiry = (key) => {
     const itemStr = localStorage.getItem(key);
@@ -45,7 +51,6 @@ function App() {
   const handleInputChange = (event) => {
     const newValue = event.target.value;
     setSearchMovie(newValue);
-    console.log(searchMovie);
   };
 
   const setWithExpiry = (key, value, ttl) => {
@@ -71,9 +76,9 @@ function App() {
 
   const handleSumbit = () => {
     window.scrollTo(0, 0);
-    setCurrentPage(1);
-    getSearchResults(1, searchMovie);
+    // setCurrentPage(1);
     getTotalPages(searchMovie);
+    getSearchResults(1, searchMovie);
   };
 
   const saveUserData = (data) => {
@@ -91,7 +96,7 @@ function App() {
         ? (
           <div>
             <NavBar onChange={handleInputChange} onSubmit={handleSumbit} />
-            <div>
+            <div className={classes.toolbar}>
               <Switch>
                 <Route exact path={["/", "/cardnote"]}>
                   <CardNote />
@@ -105,6 +110,9 @@ function App() {
                 <Route exact path={["/search"]}>
                   <SearchMovie 
                   results={searchResults}
+                  nextPage={getSearchResults}
+                  totalPages={totalPages}
+                  movie={searchMovie}
                   />
                 </Route>
               </Switch>
