@@ -25,7 +25,7 @@ export default function Search() {
 
   const renderResults = props.results.map((item, index) => {
     return(
-      <ListItem alignItems="flex-start">
+      <ListItem id={"Movie" + index} alignItems="flex-start">
         <ListItemAvatar>
           <Avatar variant="square" alt={item.title} src={item.poster} />
         </ListItemAvatar>

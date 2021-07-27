@@ -8,6 +8,7 @@ import theme from './components/theme/theme'
 import Box from '@material-ui/core/Box';
 import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useLocation, useHistory } from "react-router-dom";
+import SearchMovie from './components/Search/Search'
 
 function App() {
   const getWithExpiry = (key) => {
@@ -66,6 +67,12 @@ function App() {
                 </Route>
                 <Route exact path={["/theater"]}>
                   <Theater />
+                </Route>
+                <Route exact path={["/theater"]}>
+                  <Theater />
+                </Route>
+                <Route exact path={["/search"]}>
+                  <SearchMovie />
                 </Route>
               </Switch>
             </div>
