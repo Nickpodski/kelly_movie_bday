@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
+  let history = useHistory();
   const classes = useStyles();
   const [searchMovie, setSearchMovie] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -83,11 +84,21 @@ function App() {
 
   const saveUserData = (data) => {
     setUserData({
-      email: data.user.username,
+      username: data.user.username,
       movies_watched: data.user.movies_watched,
       movies_watched_theater: data.user.movies_watched_theater,
       isLoggedIn: true
     });
+  }
+
+  const handleLogout = () => {
+    setUserData({
+      username: "",
+      movies_watched: [],
+      movies_watched_theater: [],
+      isLoggedIn: false
+    });
+    history.push("/");
   }
 
   return (
@@ -95,7 +106,9 @@ function App() {
       {userData.isLoggedIn
         ? (
           <div>
-            <NavBar onChange={handleInputChange} onSubmit={handleSumbit} />
+            <NavBar 
+            onChange={handleInputChange} 
+            onSubmit={handleSumbit} />
             <div className={classes.toolbar}>
               <Switch>
                 <Route exact path={["/", "/cardnote"]}>
@@ -104,8 +117,9 @@ function App() {
                 <Route exact path={["/theater"]}>
                   <Theater />
                 </Route>
-                <Route exact path={["/theater"]}>
-                  <Theater />
+                <Route exact path={["/logout"]}>
+                  {handleLogout}
+                  <LogoutScreen />
                 </Route>
                 <Route exact path={["/search"]}>
                   <SearchMovie 

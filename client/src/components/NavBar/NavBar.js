@@ -102,9 +102,10 @@ export default function BottomAppBar(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    const path = e.currentTarget.id;
     setAnchorEl(null);
-    history.push("/theater");
+    history.push(path);
   };
 
   return (
@@ -128,10 +129,10 @@ export default function BottomAppBar(props) {
             color="inherit"
             className={classes.menu}
           >
-            <MenuItem onClick={handleClose}>Card Note</MenuItem>
-            <MenuItem onClick={handleClose}>Theater Movie List</MenuItem>
-            <MenuItem onClick={handleClose}>Movies Together List</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem id="/note" onClick={handleClose}>Card Note</MenuItem>
+            <MenuItem id="/theater" onClick={handleClose}>Theater Movie List</MenuItem>
+            <MenuItem id="/movies" onClick={handleClose}>Movies Together List</MenuItem>
+            <MenuItem id="/logout" onClick={handleClose}>Logout</MenuItem>
           </Menu>
           <div className={classes.grow} />
           <form className={classes.search} onSubmit={searchMovie} ref={formRef}>
