@@ -107,8 +107,10 @@ export default function BottomAppBar(props) {
     setAnchorEl(null);
     if (path === "/logout") {
       handleLogout();
+    } else {
+      history.push(path);
     }
-    history.push(path);
+    
   };
 
   return (
