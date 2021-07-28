@@ -11,6 +11,10 @@ import { Redirect, Route, Switch, useLocation, useHistory } from "react-router-d
 import SearchMovie from './components/Search/Search';
 import { fetchTotalPages, searchMovies } from "../src/utils/API";
 import { makeStyles } from '@material-ui/core/styles';
+import SingleMovie from './components/SingleMovie/SingleMovie';
+import axios from "axios";
+import SingleList from './components/SingleList/SingleList';
+import Together from './components/Together/Together';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
@@ -22,6 +26,7 @@ function App() {
   const [searchMovie, setSearchMovie] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [totalPages, setTotalPages] = useState([]);
+  const [singleMovie, setSingleMovie] = useState([]);
   // const [currentPage, setCurrentPage] = useState();
 
   const getWithExpiry = (key) => {
@@ -91,6 +96,15 @@ function App() {
     });
   }
 
+  const saveUserMoviesWatched = (data) => {
+    setUserData({
+      username: data.username,
+      movies_watched: data.movies_watched,
+      movies_watched_theater: data.movies_watched_theater,
+      isLoggedIn: true
+    });
+  };
+
   const handleLogout = () => {
     setUserData({
       username: "",
@@ -99,6 +113,104 @@ function App() {
       isLoggedIn: false
     });
     history.push("/");
+  };
+
+  const searchClickMovie = (index) => {
+    setSingleMovie(searchResults[index]);
+    history.push("/singlemovie");
+  }
+
+  const theaterListClickMovie = (index) => {
+    setSingleMovie(userData.movies_watched_theater[index]);
+    history.push("/singlemovielist");
+  }
+
+  const ListClickMovie = (index) => {
+    setSingleMovie(userData.movies_watched[index]);
+    history.push("/singlemovielist");
+  }
+
+  const addMWNT = (movie) => {
+    const movieData = {
+      "title": movie.title,
+      "movie_id": movie.id,
+      "movie_genres": movie.genres,
+      "poster": movie.poster,
+      "overview": movie.overview,
+      "release_date": movie.releaseDate,
+      "rating": movie.rating,
+      "vote_count": movie.voteCount
+    }
+    const moviesWatched = userData.movies_watched;
+    moviesWatched.push(movieData);
+    const newUserData = {
+      username: userData.username,
+      movies_watched: moviesWatched,
+      movies_watched_theater: userData.movies_watched_theater,
+      isLoggedIn: true
+    }
+    saveUserMoviesWatched(newUserData);
+    history.push("/search");
+    addMWNTReq(userData.username, moviesWatched);
+  }
+
+  const addMWT = (movie) => {
+    const movieData = {
+      "title": movie.title,
+      "movie_id": movie.id,
+      "movie_genres": movie.genres,
+      "poster": movie.poster,
+      "overview": movie.overview,
+      "release_date": movie.releaseDate,
+      "rating": movie.rating,
+      "vote_count": movie.voteCount
+    }
+    const moviesTheater = userData.movies_watched_theater;
+    const moviesWatched = userData.movies_watched;
+    moviesTheater.push(movieData);
+    moviesWatched.push(movieData);
+    const newUserData = {
+      username: userData.username,
+      movies_watched: moviesWatched,
+      movies_watched_theater: moviesTheater,
+      isLoggedIn: true
+    }
+    saveUserMoviesWatched(newUserData);
+    history.push("/search");
+    addMWNTReq(userData.username, moviesWatched);
+    addMWTReq(userData.username, moviesTheater);
+  }
+
+  const addMWTReq = ( username, moviesTheater) => {
+    axios.put('/api/user/addmoviewatchtheater', { username, moviesTheater })
+      .then(res => {
+        console.log(res.data.message);
+      })
+      .catch((error) => {
+        if(error.response) {
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          console.log('Server connection Issue');
+        } else {
+          console.log(error.message);
+        }
+      })
+  }
+
+  const addMWNTReq = ( username, moviesWatched) => {
+    axios.put('/api/user/addmoviewatched', { username, moviesWatched })
+      .then(res => {
+        console.log(res.data.message);
+      })
+      .catch((error) => {
+        if(error.response) {
+          console.log(error.response.data.message);
+        } else if (error.request) {
+          console.log('Server connection Issue');
+        } else {
+          console.log(error.message);
+        }
+      })
   }
 
   return (
@@ -108,18 +220,33 @@ function App() {
           <div>
             <NavBar 
             onChange={handleInputChange} 
-            onSubmit={handleSumbit} />
+            onSubmit={handleSumbit} 
+            handleLogout={handleLogout}
+            />
             <div className={classes.toolbar}>
               <Switch>
                 <Route exact path={["/", "/cardnote"]}>
                   <CardNote />
                 </Route>
                 <Route exact path={["/theater"]}>
-                  <Theater />
+                  <Theater 
+                  theaterList={userData.movies_watched_theater}
+                  clickMovie={theaterListClickMovie}
+                  />
                 </Route>
-                <Route exact path={["/logout"]}>
-                  {handleLogout}
-                  <LogoutScreen />
+                <Route exact path={["/together"]}>
+                  <Together
+                  togetherList={userData.movies_watched}
+                  clickMovie={ListClickMovie}
+                  />
+                </Route>
+                <Route exact path={["/singlemovie"]}>
+                  <SingleMovie 
+                  movie={singleMovie}
+                  addMWNT={addMWNT}
+                  addMWT={addMWT}
+                  userData={userData}
+                  />
                 </Route>
                 <Route exact path={["/search"]}>
                   <SearchMovie 
@@ -127,6 +254,13 @@ function App() {
                   nextPage={getSearchResults}
                   totalPages={totalPages}
                   movie={searchMovie}
+                  clickMovie={searchClickMovie}
+                  />
+                </Route>
+                <Route exact path={["/singlemovielist"]}>
+                  <SingleList 
+                  movie={singleMovie}
+                  userData={userData}
                   />
                 </Route>
               </Switch>

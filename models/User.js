@@ -23,7 +23,6 @@ const UserSchema = new Schema({
       movie_id: {
         type: Number,
       },
-   
       movie_genres: [
         {
           type: Array
@@ -32,7 +31,16 @@ const UserSchema = new Schema({
       poster: {
         type: String,
       },
-      movie_runtime: {
+      overview: {
+        type: String,
+      },
+      release_date: {
+        type: String,
+      },
+      rating: {
+        type: Number
+      },
+      vote_count: {
         type: Number
       },
     },
@@ -46,7 +54,6 @@ const UserSchema = new Schema({
       movie_id: {
         type: Number,
       },
-   
       movie_genres: [
         {
           type: Array
@@ -55,7 +62,16 @@ const UserSchema = new Schema({
       poster: {
         type: String,
       },
-      movie_runtime: {
+      overview: {
+        type: String,
+      },
+      release_date: {
+        type: String,
+      },
+      rating: {
+        type: Number
+      },
+      vote_count: {
         type: Number
       },
     },

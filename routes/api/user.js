@@ -49,7 +49,7 @@ router.put('/addmoviewatched', async (req, res) =>  {
           movies_watched: req.body.moviesWatched
         }  
       },);
-      res.status(200).json({message: 'Successfully updated your have seen list!'})
+      res.status(200).json({message: 'Successfully updated!'})
   } catch (err) {
     res.status(400).json({message: err.message});
   }
@@ -58,13 +58,13 @@ router.put('/addmoviewatched', async (req, res) =>  {
 router.put('/addmoviewatchtheater', async (req, res) =>  {
   try {
       await User.updateOne({
-      username: req.body.username
+        username: req.body.username
       }, {
         $set: {
-          movies_watched_theater: req.body.movieWatchTheater
+          movies_watched_theater: req.body.moviesTheater
         }  
       },);
-      res.status(200).json({message: 'Successfully updated your watchlist!'})
+      res.status(200).json({message: 'Successfully updated!'})
   } catch (err) {
     res.status(400).json({message: err.message});
   }

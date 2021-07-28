@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BottomAppBar(props) {
-  const { onChange, onSubmit } = props;
+  const { onChange, onSubmit, handleLogout } = props;
   let history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -105,6 +105,9 @@ export default function BottomAppBar(props) {
   const handleClose = (e) => {
     const path = e.currentTarget.id;
     setAnchorEl(null);
+    if (path === "/logout") {
+      handleLogout();
+    }
     history.push(path);
   };
 
@@ -129,9 +132,9 @@ export default function BottomAppBar(props) {
             color="inherit"
             className={classes.menu}
           >
-            <MenuItem id="/note" onClick={handleClose}>Card Note</MenuItem>
+            <MenuItem id="/cardnote" onClick={handleClose}>Card Note</MenuItem>
             <MenuItem id="/theater" onClick={handleClose}>Theater Movie List</MenuItem>
-            <MenuItem id="/movies" onClick={handleClose}>Movies Together List</MenuItem>
+            <MenuItem id="/together" onClick={handleClose}>Movies Together List</MenuItem>
             <MenuItem id="/logout" onClick={handleClose}>Logout</MenuItem>
           </Menu>
           <div className={classes.grow} />

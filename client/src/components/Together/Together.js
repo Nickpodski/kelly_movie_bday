@@ -33,18 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Search(props) {
+export default function Together(props) {
   const classes = useStyles();
-  const { totalPages, movie, nextPage, clickMovie } = props;
-  const [page, setPage] = useState(1);
-
-
-  const handleChangePage = (event, newPage) => {
-    event.preventDefault();
-    setPage(newPage);
-    nextPage(newPage, movie);
-    window.scrollTo( 0, 0 );
-  };
+  const { clickMovie, togetherList } = props;
 
   const clickSingleMovie = (event) => {
     const index = event.currentTarget.id;
@@ -53,7 +44,7 @@ export default function Search(props) {
   }
 
 
-  const renderResults = props.results.map((item, index) => {
+  const renderResults = togetherList.map((item, index) => {
     return (
       <>
         <ListItem
@@ -77,7 +68,7 @@ export default function Search(props) {
                 >
                   {item.overview}
                 </Typography>
-                {item.releaseDate}
+                {item.release_date}
               </React.Fragment>
             }
           />
@@ -90,27 +81,9 @@ export default function Search(props) {
   return (
     <Grid container alignContent='center'>
       <Grid item className={classes.grid}>
-      <div className={classes.pagination}>
-        <Pagination 
-        count={totalPages} 
-        color="primary" 
-        onChange={handleChangePage}
-        page={page}
-        />
-      </div>
-      </Grid>
-      <Grid item>
       <List className={classes.root}>
         {renderResults}
       </List>
-      <div className={classes.pagination}>
-        <Pagination 
-        count={totalPages} 
-        color="primary" 
-        onChange={handleChangePage}
-        page={page}
-        />
-      </div>
       </Grid>
     </ Grid>
   );
